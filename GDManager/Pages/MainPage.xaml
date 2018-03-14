@@ -5,9 +5,52 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GDManager"
              xmlns:core="clr-namespace:GDManager.Core;assembly=GDManager.Core"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="Red">
+             mc:Ignorable="d">
+    
+    <Border Background="{StaticResource WhiteLightBrush}"
+            Padding="60">
+
+        <Grid Background="{StaticResource WhiteDarkBrush}">
             
-    </Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="Url: "
+                           Style="{StaticResource QuestionTextBlockStyle}" />
+
+                <TextBox Text="{Binding UserUrl, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Column="1"
+                         Style="{StaticResource BigInputTextBox}" />
+
+                <Button Content="Add"
+                        Grid.Column="2"
+                        Command="{Binding AddNewBeatmapCommand}"
+                        Style="{StaticResource BaseUIButton}" />
+
+            </Grid>
+
+            <local:BeatmapContainer DataContext="{Binding Beatmaps}"
+                                    Grid.Row="1" />
+
+            <Button Content="Check for mods"
+                    Grid.Row="2"
+                    Command="{Binding CheckModsCommand}"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource BaseUIButton}" />
+
+        </Grid>
+        
+    </Border>
+    
 </local:BasePage>

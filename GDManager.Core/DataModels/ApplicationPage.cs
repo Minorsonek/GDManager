@@ -13,6 +13,21 @@
         /// <summary>
         /// Main page with maps
         /// </summary>
-        Main
+        Main,
+
+        /// <summary>
+        /// Help page with "How to" tutorial
+        /// </summary>
+        Help,
+
+        /// <summary>
+        /// About page containing informations about the app
+        /// </summary>
+        About,
+
+        /// <summary>
+        /// Experimental page for testing new features
+        /// </summary>
+        Experimental
     }
 }

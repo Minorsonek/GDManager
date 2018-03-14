@@ -20,6 +20,11 @@
         /// </summary>
         public BaseViewModel CurrentPageViewModel { get; set; }
 
+        /// <summary>
+        /// Show the side menu only if we are not on login page
+        /// </summary>
+        public bool SideMenuVisible => IoC.Application.CurrentPage != ApplicationPage.None;
+
         #endregion
 
         #region Public Methods
