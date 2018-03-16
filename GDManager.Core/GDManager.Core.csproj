@@ -36,6 +36,9 @@
     <Reference Include="HtmlAgilityPack, Version=1.7.1.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.7.1\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
@@ -57,7 +60,11 @@
     <Compile Include="Base\RelayCommand.cs" />
     <Compile Include="Base\RelayParameterizedCommand.cs" />
     <Compile Include="DataModels\ApplicationPage.cs" />
-    <Compile Include="DataModels\Beatmap.cs" />
+    <Compile Include="DataModels\Beatmap\BeatmapListItem.cs" />
+    <Compile Include="DataModels\Beatmap\Beatmap.cs" />
+    <Compile Include="DataModels\Beatmap\Discussion.cs" />
+    <Compile Include="DataModels\Beatmap\BeatmapDiscussion.cs" />
+    <Compile Include="DataModels\Beatmap\DiscussionPost.cs" />
     <Compile Include="DataModels\IconType.cs" />
     <Compile Include="Icons\IconTypeExtensions.cs" />
     <Compile Include="IoC\IoC.cs" />
@@ -75,10 +82,6 @@
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Downloads\osu-api-master\osu-api-master\osu!api\osu!api.csproj">
-      <Project>{e8a96fb5-7e4c-4706-b104-ac65abc1c5a7}</Project>
-      <Name>osu!api</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Testinator\Source\Testinator.AnimationFramework\Testinator.AnimationFramework.csproj">
       <Project>{2e0e2554-da07-45a6-9647-8f2907851472}</Project>
       <Name>Testinator.AnimationFramework</Name>

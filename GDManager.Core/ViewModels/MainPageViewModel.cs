@@ -1,6 +1,8 @@
 ﻿using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace GDManager.Core
@@ -25,7 +27,7 @@ namespace GDManager.Core
         /// <summary>
         /// List of every saved beatmap
         /// </summary>
-        public ObservableCollection<Beatmap> Beatmaps { get; set; } = new ObservableCollection<Beatmap>();
+        public ObservableCollection<BeatmapListItem> Beatmaps { get; set; } = new ObservableCollection<BeatmapListItem>();
 
         #endregion
 
@@ -64,12 +66,9 @@ namespace GDManager.Core
         /// </summary>
         private void AddBeatmap()
         {
-            var osuapi = new Osu.Api(OsuAPI);
 
-            var beatmaps = osuapi.GetBeatmapsAsync(b: 1576795);
-
-            // Create new beatmap object
-            var beatmap = new Beatmap
+            // Create new beatmap item
+            var beatmap = new BeatmapListItem
             {
                 BeatmapURL = UserUrl,
                 BeatmapID = GetBeatmapIDFromURL(UserUrl)
@@ -91,7 +90,24 @@ namespace GDManager.Core
                 var web = new HtmlWeb();
                 var doc = web.Load(beatmap.BeatmapURL);
 
-                // Make it as string
+                // From the html page, take script tags
+                var scriptNodes = doc.DocumentNode.Descendants()
+                                  .Where(n => n.Name == "script");
+
+                // Find the one with json inside
+                var jsonString = GetJsonScriptTag(scriptNodes).InnerText;
+
+                // Parse the json
+                var parsedJson = JObject.Parse(jsonString);
+
+                // Create beatmapset discussion from that
+                var beatmapDiscussion = new BeatmapsetDiscussion(parsedJson);
+
+                // Find the appropriate diff
+
+                // Check if there are mods 
+
+                /*
                 var outputHtml = doc.DocumentNode.OuterHtml;
 
                 // Check if there is a mod which can be resolved but is not
@@ -100,7 +116,7 @@ namespace GDManager.Core
                     beatmap.IsNewMod = true;
                 else
                     // No new mods
-                    beatmap.IsNewMod = false;
+                    beatmap.IsNewMod = false;*/
             }
 
             // Inform the view
@@ -119,6 +135,21 @@ namespace GDManager.Core
         {
             // TODO: implement it
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Returns the script html tag with json inside
+        /// </summary>
+        /// <param name="scriptNodes">Script nodes to check</param>
+        private HtmlNode GetJsonScriptTag(IEnumerable<HtmlNode> scriptNodes)
+        {
+            // Check each node
+            foreach (var node in scriptNodes)
+                // Check if json is inside, based on "beatmapset" json tag which starts every json discuss
+                if (node.InnerText.Contains("\"beatmapset\""))
+                    return node;
+
+            return null;
         }
 
         #endregion

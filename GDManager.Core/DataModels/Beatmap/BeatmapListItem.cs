@@ -1,9 +1,9 @@
 ﻿namespace GDManager.Core
 {
     /// <summary>
-    /// The osu! beatmap object
+    /// 
     /// </summary>
-    public class Beatmap
+    public class BeatmapListItem
     {
         #region Public Properties
 
