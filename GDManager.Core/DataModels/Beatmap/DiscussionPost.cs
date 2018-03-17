@@ -40,7 +40,17 @@ namespace GDManager.Core
             // Match every property with that came from json
             ID = (string)postJson["id"];
             DiscussionID = (string)postJson["beatmap_discussion_id"];
-            Message = (string)postJson["message"];
+
+            try
+            {
+                // Try to convert the message
+                Message = (string)postJson["message"];
+            }
+            catch
+            {
+                // If failed, it means that the message type is resolved and we dont handle that type of messages
+                Message = "RESOLVED";
+            }
         }
 
         #endregion

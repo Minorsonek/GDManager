@@ -13,6 +13,10 @@
                         <!-- Content -->
                         <Border x:Name="background" Background="{StaticResource WhiteDarkBrush}">
 
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{Binding OpenBeatmapInBrowserCommand}" />
+                            </Border.InputBindings>
+
                             <Grid x:Name="container" 
                                   Height="100" 
                                   Margin="5"

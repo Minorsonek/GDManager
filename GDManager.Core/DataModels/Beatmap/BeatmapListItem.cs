@@ -1,4 +1,7 @@
-﻿namespace GDManager.Core
+﻿using System.Diagnostics;
+using System.Windows.Input;
+
+namespace GDManager.Core
 {
     /// <summary>
     /// Single beatmapset item stored in the list in main page
@@ -36,6 +39,28 @@
         /// Indicates if there is new mod to be answered on the beatmap's discussion
         /// </summary>
         public bool IsNewMod { get; set; }
+
+        #endregion
+
+        #region Commands
+
+        /// <summary>
+        /// The command to open discussion url in browser
+        /// </summary>
+        public ICommand OpenBeatmapInBrowserCommand { get; private set; }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public BeatmapListItem()
+        {
+            // Create commands
+            OpenBeatmapInBrowserCommand = new RelayCommand(() => Process.Start(DiscussionUrl));
+        }
 
         #endregion
     }
