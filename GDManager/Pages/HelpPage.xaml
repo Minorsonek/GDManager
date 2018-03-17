@@ -1,0 +1,49 @@
+﻿<local:BasePage x:Class="GDManager.HelpPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GDManager"
+             mc:Ignorable="d">
+    
+    <Border Background="{StaticResource WhiteLightBrush}"
+            Padding="60">
+
+        <StackPanel>
+            <TextBlock Text="Better UI soon, for now i've made it just to get WORKING version."
+                       TextWrapping="WrapWithOverflow"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="For now, no error handling, so STICK to the tutorial below."
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="In the discussion Url enter the WHOLE beatmapset discussion url."
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="Example: https://osu.ppy.sh/beatmapsets/738921/discussion"
+                       FontFamily="{StaticResource FontMontserratExtraBold}"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="In the difficulty Url enter the SINGLE beatmap url, which you get by clicking on it in old website (remove m=0 etc)."
+                       TextWrapping="WrapWithOverflow"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="Example: https://osu.ppy.sh/b/1576795"
+                       FontFamily="{StaticResource FontMontserratExtraBold}"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="Click add to save it, as i said no error handling for now so be precise."
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="To check mods, click Check button as it will check if there are new mods SPECIFIC to the diff you provided in EVERY listed beatmap."
+                       TextWrapping="WrapWithOverflow"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="Let me know in-game (Minorsonek) if you enjoy, so i can keep working on this app to make it BETTER!"
+                       TextWrapping="WrapWithOverflow"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+        </StackPanel>
+        
+    </Border>
+    
+</local:BasePage>

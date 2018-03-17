@@ -38,6 +38,11 @@ namespace GDManager.Core
         /// </summary>
         public Beatmap(JToken beatmapJson)
         {
+            // Don't save null beatmap, as website may have ones
+            if (!beatmapJson.HasValues)
+                return;
+            
+            // Match every property with that came from json
             ID = (string)beatmapJson["id"];
             BeatmapsetID = (string)beatmapJson["beatmapset_id"];
             DiffName = (string)beatmapJson["version"];

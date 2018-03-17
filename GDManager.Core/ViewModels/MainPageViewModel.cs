@@ -1,7 +1,9 @@
 ﻿using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
@@ -15,19 +17,19 @@ namespace GDManager.Core
         #region Public Properties
 
         /// <summary>
-        /// Contains an url which is provided by a user in input box
+        /// Contains an discussion url which is provided by a user in input box
         /// </summary>
-        public string UserUrl { get; set; }
+        public string DiscussionUrl { get; set; }
 
         /// <summary>
-        /// TODO: delete
+        /// Contains an url to specific beatmap which is provided by user in input box
         /// </summary>
-        public string OsuAPI { get; set; }
+        public string BeatmapUrl { get; set; }
 
         /// <summary>
         /// List of every saved beatmap
         /// </summary>
-        public ObservableCollection<BeatmapListItem> Beatmaps { get; set; } = new ObservableCollection<BeatmapListItem>();
+        public ObservableCollection<BeatmapListItem> Beatmapsets { get; set; } 
 
         #endregion
 
@@ -53,8 +55,11 @@ namespace GDManager.Core
         public MainPageViewModel()
         {
             // Create commands
-            AddNewBeatmapCommand = new RelayCommand(AddBeatmap);
+            AddNewBeatmapCommand = new RelayCommand(AddUserBeatmap);
             CheckModsCommand = new RelayCommand(CheckMods);
+
+            // Load saved beatmaps
+            LoadBeatmaps();
         }
 
         #endregion
@@ -62,20 +67,15 @@ namespace GDManager.Core
         #region Command Methods
 
         /// <summary>
-        /// Adds new beatmap to the list
+        /// Adds new beatmap to the list based on user's input
         /// </summary>
-        private void AddBeatmap()
+        private void AddUserBeatmap()
         {
+            // Add the beatmap to the list based on input
+            AddBeatmap(DiscussionUrl, BeatmapUrl);
 
-            // Create new beatmap item
-            var beatmap = new BeatmapListItem
-            {
-                BeatmapURL = UserUrl,
-                BeatmapID = GetBeatmapIDFromURL(UserUrl)
-            };
-
-            // Add the beatmap to the list
-            Beatmaps.Add(beatmap);
+            // Save current state of beatmaps
+            SaveBeatmaps();
         }
 
         /// <summary>
@@ -83,44 +83,27 @@ namespace GDManager.Core
         /// </summary>
         private void CheckMods()
         {
-            // Check each beatmap...
-            foreach (var beatmap in Beatmaps)
+            // Check each beatmapset...
+            foreach (var beatmapset in Beatmapsets)
             {
-                // Get the page by beatmap url
-                var web = new HtmlWeb();
-                var doc = web.Load(beatmap.BeatmapURL);
+                // Get beatmapset discussion 
+                var beatmapDiscussion = GetBeatmapsetDiscussionByURL(beatmapset.DiscussionUrl);
 
-                // From the html page, take script tags
-                var scriptNodes = doc.DocumentNode.Descendants()
-                                  .Where(n => n.Name == "script");
-
-                // Find the one with json inside
-                var jsonString = GetJsonScriptTag(scriptNodes).InnerText;
-
-                // Parse the json
-                var parsedJson = JObject.Parse(jsonString);
-
-                // Create beatmapset discussion from that
-                var beatmapDiscussion = new BeatmapsetDiscussion(parsedJson);
-
-                // Find the appropriate diff
-
-                // Check if there are mods 
-
-                /*
-                var outputHtml = doc.DocumentNode.OuterHtml;
-
-                // Check if there is a mod which can be resolved but is not
-                if (outputHtml.Contains("\"resolved\":false,\"can_be_resolved\":true"))
-                    // New mod is up to be answered
-                    beatmap.IsNewMod = true;
-                else
-                    // No new mods
-                    beatmap.IsNewMod = false;*/
+                // Get into every beatmap discussion
+                foreach (var discussion in beatmapDiscussion.Discussions)
+                    // Only if the beatmap is the one we are looking for...
+                    if (discussion.BeatmapID == beatmapset.BeatmapID)
+                    {
+                        // Check if there are mods
+                        if (discussion.CanBeResolved && !discussion.IsResolved)
+                            beatmapset.IsNewMod = true;
+                        else
+                            beatmapset.IsNewMod = false;
+                    }
             }
 
             // Inform the view
-            OnPropertyChanged(nameof(Beatmaps));
+            OnPropertyChanged(nameof(Beatmapsets));
         }
 
         #endregion
@@ -128,13 +111,69 @@ namespace GDManager.Core
         #region Private Helpers
 
         /// <summary>
+        /// Adds new beatmap to the list
+        /// </summary>
+        private void AddBeatmap(string discussionUrl, string difficultyUrl)
+        {
+            // Get beatmapset discussion 
+            var beatmapDiscussion = GetBeatmapsetDiscussionByURL(discussionUrl);
+
+            // Get the ID of beatmap we are adding
+            var id = GetBeatmapIDFromURL(difficultyUrl);
+
+            // Get the beatmap we need from that
+            foreach (var tokenBeatmap in beatmapDiscussion.Beatmaps)
+                if (tokenBeatmap.ID == id)
+                {
+                    // We have the beatmap we need, create new item based on this
+                    var beatmap = new BeatmapListItem
+                    {
+                        DiscussionUrl = discussionUrl,
+                        BeatmapID = tokenBeatmap.ID,
+                        Title = beatmapDiscussion.Artist + " - " + beatmapDiscussion.Title,
+                        Name = tokenBeatmap.DiffName,
+                        StarRating = tokenBeatmap.DiffStarRating
+                    };
+
+                    // Add the beatmap to the list
+                    Beatmapsets.Add(beatmap);
+                }
+        }
+
+        /// <summary>
+        /// Returns the <see cref="BeatmapsetDiscussion"/> object from the osu! website
+        /// </summary>
+        private BeatmapsetDiscussion GetBeatmapsetDiscussionByURL(string url)
+        {
+            // Get the page by beatmap url
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
+
+            // From the html page, take script tags
+            var scriptNodes = doc.DocumentNode.Descendants()
+                              .Where(n => n.Name == "script");
+
+            // Find the one with json inside
+            var jsonString = GetJsonScriptTag(scriptNodes).InnerText;
+
+            // Parse the json
+            var parsedJson = JObject.Parse(jsonString);
+
+            // Return beatmapset discussion from that
+            return new BeatmapsetDiscussion(parsedJson);
+        }
+
+        /// <summary>
         /// Returns the beatmap ID based on it's url
         /// </summary>
-        /// <param name="url">The url to the beatmap's thread</param>
+        /// <param name="url">The url to the beatmap</param>
         private string GetBeatmapIDFromURL(string url)
         {
-            // TODO: implement it
-            return string.Empty;
+            // Split the url by /
+            var tokens = url.Split('/');
+
+            // 4th token is our id
+            return tokens[4];
         }
 
         /// <summary>
@@ -150,6 +189,49 @@ namespace GDManager.Core
                     return node;
 
             return null;
+        }
+
+        /// <summary>
+        /// Loads saved beatmaps from file to the list in this page
+        /// </summary>
+        private void LoadBeatmaps()
+        {
+            // Initialize the list
+            Beatmapsets = new ObservableCollection<BeatmapListItem>();
+
+            // Load everything from file
+            var fileContent = File.ReadAllLines("beatmaps.txt");
+
+            // Convert file content into beatmaps
+            for (int i = 0; i < fileContent.Length; i += 2)
+            {
+                // Get two lines
+                var discussionUrl = fileContent[i];
+                var difficultyUrl = fileContent[i + 1];
+
+                // Add the beatmap based on that
+                AddBeatmap(discussionUrl, difficultyUrl);
+            }
+        }
+
+        /// <summary>
+        /// Saves current state of beatmapsets list to the list
+        /// </summary>
+        private void SaveBeatmaps()
+        {
+            // Prepare list of content to save
+            var fileContent = new List<string>();
+
+            // For each beatmap...
+            foreach (var beatmap in Beatmapsets)
+            {
+                // Save both urls
+                fileContent.Add(beatmap.DiscussionUrl);
+                fileContent.Add(@"https://osu.ppy.sh/b/" + beatmap.BeatmapID);
+            }
+
+            // Save it to .txt file
+            File.WriteAllLines("beatmaps.txt", fileContent);
         }
 
         #endregion

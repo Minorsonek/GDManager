@@ -10,7 +10,7 @@
         /// <summary>
         /// The current page of the application
         /// </summary>
-        public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Main;
+        public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Help;
 
         /// <summary>
         /// The view model to use for the current page when the CurrentPage changes
@@ -21,9 +21,9 @@
         public BaseViewModel CurrentPageViewModel { get; set; }
 
         /// <summary>
-        /// Show the side menu only if we are not on login page
+        /// Show the side menu everytime for now
         /// </summary>
-        public bool SideMenuVisible => IoC.Application.CurrentPage != ApplicationPage.None;
+        public bool SideMenuVisible => true;
 
         #endregion
 

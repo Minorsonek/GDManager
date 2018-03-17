@@ -33,6 +33,10 @@ namespace GDManager.Core
         /// </summary>
         public DiscussionPost(JToken postJson)
         {
+            // Don't save null post, as website may have ones
+            if (!postJson.HasValues)
+                return;
+
             // Match every property with that came from json
             ID = (string)postJson["id"];
             DiscussionID = (string)postJson["beatmap_discussion_id"];

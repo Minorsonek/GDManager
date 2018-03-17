@@ -49,13 +49,20 @@ namespace GDManager.Core
         /// </summary>
         public Discussion(JToken discussionJson)
         {
+            // Don't save null discussion, as website may have ones
+            if (!discussionJson.HasValues)
+                return;
+
             // Match every property with that came from json
             ID = (string)discussionJson["id"];
             BeatmapsetID = (string)discussionJson["beatmapset_id"];
             BeatmapID = (string)discussionJson["beatmap_id"];
             IsResolved = (bool)discussionJson["resolved"];
             CanBeResolved = (bool)discussionJson["can_be_resolved"];
-            //Posts = discussionJson["id"];
+
+            Posts = new List<DiscussionPost>();
+            foreach (var postJson in discussionJson["posts"])
+                Posts.Add(new DiscussionPost(postJson));
         }
 
         #endregion

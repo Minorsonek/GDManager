@@ -22,6 +22,15 @@ namespace GDManager
                 case ApplicationPage.Main:
                     return new MainPage(viewModel as MainPageViewModel);
 
+                case ApplicationPage.Help:
+                    return new HelpPage();
+
+                case ApplicationPage.About:
+                    return new AboutPage();
+
+                case ApplicationPage.Experimental:
+                    return new ExperimentalPage();
+
                 default:
                     Debugger.Break();
                     return null;
@@ -38,6 +47,15 @@ namespace GDManager
             // Find application page that matches the base page
             if (page is MainPage)
                 return ApplicationPage.Main;
+
+            if (page is HelpPage)
+                return ApplicationPage.Help;
+
+            if (page is AboutPage)
+                return ApplicationPage.About;
+
+            if (page is ExperimentalPage)
+                return ApplicationPage.Experimental;
 
             // Alert developer of an issue
             Debugger.Break();

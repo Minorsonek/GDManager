@@ -13,34 +13,49 @@
         <Grid Background="{StaticResource WhiteDarkBrush}">
             
             <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid>
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
-                <TextBlock Text="Url: "
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Discussion Url: "
                            Style="{StaticResource QuestionTextBlockStyle}" />
 
-                <TextBox Text="{Binding UserUrl, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding DiscussionUrl, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Column="1"
-                         Style="{StaticResource BigInputTextBox}" />
+                         Style="{StaticResource SmallInputTextBox}" />
+
+                <TextBlock Text="Difficulty Url: "
+                           Grid.Row="1"
+                           Style="{StaticResource QuestionTextBlockStyle}" />
+
+                <TextBox Text="{Binding BeatmapUrl, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Column="1"
+                         Grid.Row="1"
+                         Style="{StaticResource SmallInputTextBox}" />
 
                 <Button Content="Add"
                         Grid.Column="2"
+                        Grid.RowSpan="2"
                         Command="{Binding AddNewBeatmapCommand}"
                         Style="{StaticResource BaseUIButton}" />
 
             </Grid>
 
-            <local:BeatmapContainer DataContext="{Binding Beatmaps}"
+            <local:BeatmapContainer DataContext="{Binding Beatmapsets}"
                                     Grid.Row="1" />
 
             <Button Content="Check for mods"
