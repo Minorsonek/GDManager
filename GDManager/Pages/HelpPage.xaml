@@ -14,21 +14,18 @@
                        TextWrapping="WrapWithOverflow"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 
-            <TextBlock Text="For now, no error handling, so STICK to the tutorial below."
-                       Style="{StaticResource QuestionTextBlockStyle}" />
-
-            <TextBlock Text="In the discussion Url enter the WHOLE beatmapset discussion url."
-                       Style="{StaticResource QuestionTextBlockStyle}" />
-
-            <TextBlock Text="Example: https://osu.ppy.sh/beatmapsets/738921/discussion"
-                       FontFamily="{StaticResource FontMontserratExtraBold}"
-                       Style="{StaticResource QuestionTextBlockStyle}" />
-
-            <TextBlock Text="In the difficulty Url enter the SINGLE beatmap url, which you get by clicking on it in old website (remove m=0 etc)."
+            <TextBlock Text="This application works only on modding V2."
                        TextWrapping="WrapWithOverflow"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 
-            <TextBlock Text="Example: https://osu.ppy.sh/b/1576795"
+            <TextBlock Text="For now, no error handling, so STICK to the tutorial below."
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="In the difficulty Url enter the SINGLE beatmap DISCUSSION url, which you get by clicking on your difficulty in the discussion thread (timeline) at the end of the url is optional"
+                       TextWrapping="WrapWithOverflow"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="Example: https://osu.ppy.sh/beatmapsets/738921/discussion/1576795/timeline"
                        FontFamily="{StaticResource FontMontserratExtraBold}"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GDManager.Core
@@ -14,17 +15,31 @@ namespace GDManager.Core
     /// </summary>
     public class MainPageViewModel : BaseViewModel
     {
-        #region Public Properties
+        #region Private Members
 
         /// <summary>
-        /// Contains an discussion url which is provided by a user in input box
+        /// Sublist of every loaded beatmap which rewrites into UI collection as soon as every beatmap is loaded
         /// </summary>
-        public string DiscussionUrl { get; set; }
+        private List<BeatmapListItem> mBeatmapsets = new List<BeatmapListItem>();
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
         /// Contains an url to specific beatmap which is provided by user in input box
         /// </summary>
         public string BeatmapUrl { get; set; }
+
+        /// <summary>
+        /// Indicating if application is processing beatmaps (is busy)
+        /// </summary>
+        public bool ProcessingBeatmaps { get; private set; }
+
+        /// <summary>
+        /// An event to fire whenever main UI should refresh itself
+        /// </summary>
+        public event Action RefreshUI;
 
         /// <summary>
         /// List of every saved beatmap
@@ -45,6 +60,11 @@ namespace GDManager.Core
         /// </summary>
         public ICommand CheckModsCommand { get; private set; }
 
+        /// <summary>
+        /// The command to refresh main UI 
+        /// </summary>
+        public ICommand RefreshUICommand { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -57,9 +77,18 @@ namespace GDManager.Core
             // Create commands
             AddNewBeatmapCommand = new RelayCommand(AddUserBeatmap);
             CheckModsCommand = new RelayCommand(CheckMods);
+            RefreshUICommand = new RelayCommand(() =>
+            {
+                // Rewrite saved beatmaps to the UI collection
+                foreach (var beatmap in mBeatmapsets)
+                    Beatmapsets.Add(beatmap);
+            });
+
+            // Initialize the list
+            Beatmapsets = new ObservableCollection<BeatmapListItem>();
 
             // Load saved beatmaps
-            LoadBeatmaps();
+            Task.Run(() => LoadBeatmaps());            
         }
 
         #endregion
@@ -72,7 +101,7 @@ namespace GDManager.Core
         private void AddUserBeatmap()
         {
             // Add the beatmap to the list based on input
-            AddBeatmap(DiscussionUrl, BeatmapUrl);
+            Beatmapsets.Add(AddBeatmap(BeatmapUrl));
 
             // Save current state of beatmaps
             SaveBeatmaps();
@@ -83,6 +112,9 @@ namespace GDManager.Core
         /// </summary>
         private void CheckMods()
         {
+            // Application is busy
+            ProcessingBeatmaps = true;
+
             // Check each beatmapset...
             foreach (var beatmapset in Beatmapsets)
             {
@@ -104,6 +136,7 @@ namespace GDManager.Core
 
             // Inform the view
             OnPropertyChanged(nameof(Beatmapsets));
+            ProcessingBeatmaps = false;
         }
 
         #endregion
@@ -113,8 +146,11 @@ namespace GDManager.Core
         /// <summary>
         /// Adds new beatmap to the list
         /// </summary>
-        private void AddBeatmap(string discussionUrl, string difficultyUrl)
+        private BeatmapListItem AddBeatmap(string difficultyUrl)
         {
+            // Convert difficulty url to the beatmapset discussion thread url
+            var discussionUrl = ConvertDiffUrlThread(difficultyUrl);
+
             // Get beatmapset discussion 
             var beatmapDiscussion = GetBeatmapsetDiscussionByURL(discussionUrl);
 
@@ -125,8 +161,8 @@ namespace GDManager.Core
             foreach (var tokenBeatmap in beatmapDiscussion.Beatmaps)
                 if (tokenBeatmap.ID == id)
                 {
-                    // We have the beatmap we need, create new item based on this
-                    var beatmap = new BeatmapListItem
+                    // We have the beatmap we need, return new item based on this
+                    return new BeatmapListItem
                     {
                         DiscussionUrl = discussionUrl,
                         BeatmapID = tokenBeatmap.ID,
@@ -134,10 +170,22 @@ namespace GDManager.Core
                         Name = tokenBeatmap.DiffName,
                         StarRating = tokenBeatmap.DiffStarRating
                     };
-
-                    // Add the beatmap to the list
-                    Beatmapsets.Add(beatmap);
                 }
+
+            // If none found, TODO: output error
+            return null;
+        }
+
+        /// <summary>
+        /// Converts the difficulty specific url to the beatmapset discussion thread url
+        /// </summary>
+        private string ConvertDiffUrlThread(string difficultyUrl)
+        {
+            // Find where the discussion word is
+            int discussionIndex = difficultyUrl.IndexOf("discussion");
+
+            // Remove everything afterwards
+            return difficultyUrl.Substring(0, discussionIndex + "discussion".Length);
         }
 
         /// <summary>
@@ -172,8 +220,8 @@ namespace GDManager.Core
             // Split the url by /
             var tokens = url.Split('/');
 
-            // 4th token is our id
-            return tokens[4];
+            // 6th token is our id
+            return tokens[6];
         }
 
         /// <summary>
@@ -196,22 +244,28 @@ namespace GDManager.Core
         /// </summary>
         private void LoadBeatmaps()
         {
-            // Initialize the list
-            Beatmapsets = new ObservableCollection<BeatmapListItem>();
+            // Application is busy
+            ProcessingBeatmaps = true;
 
             // Load everything from file
             var fileContent = File.ReadAllLines("beatmaps.txt");
 
             // Convert file content into beatmaps
-            for (int i = 0; i < fileContent.Length; i += 2)
+            for (int i = 0; i < fileContent.Length; i++)
             {
-                // Get two lines
-                var discussionUrl = fileContent[i];
-                var difficultyUrl = fileContent[i + 1];
+                // Get url line
+                var difficultyUrl = fileContent[i];
 
-                // Add the beatmap based on that
-                AddBeatmap(discussionUrl, difficultyUrl);
+                // Convert it to beatmap
+                var beatmap = AddBeatmap(difficultyUrl);
+
+                // Add it to the sublist
+                mBeatmapsets.Add(beatmap);
             }
+
+            // Everything finished, refresh the UI
+            RefreshUI.Invoke();
+            ProcessingBeatmaps = false;
         }
 
         /// <summary>
@@ -225,9 +279,9 @@ namespace GDManager.Core
             // For each beatmap...
             foreach (var beatmap in Beatmapsets)
             {
-                // Save both urls
-                fileContent.Add(beatmap.DiscussionUrl);
-                fileContent.Add(@"https://osu.ppy.sh/b/" + beatmap.BeatmapID);
+                // Save beatmap url
+                var slashAppender = beatmap.DiscussionUrl.EndsWith("/") ? "" : "/";
+                fileContent.Add(beatmap.DiscussionUrl + slashAppender + beatmap.BeatmapID);
             }
 
             // Save it to .txt file

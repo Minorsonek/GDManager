@@ -26,6 +26,11 @@
         About,
 
         /// <summary>
+        /// Application settings page
+        /// </summary>
+        Settings,
+
+        /// <summary>
         /// Experimental page for testing new features
         /// </summary>
         Experimental

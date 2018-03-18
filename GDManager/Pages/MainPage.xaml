@@ -26,30 +26,16 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <TextBlock Text="Discussion Url: "
-                           Style="{StaticResource QuestionTextBlockStyle}" />
-
-                <TextBox Text="{Binding DiscussionUrl, UpdateSourceTrigger=PropertyChanged}"
-                         Grid.Column="1"
-                         Style="{StaticResource SmallInputTextBox}" />
-
                 <TextBlock Text="Difficulty Url: "
                            Grid.Row="1"
                            Style="{StaticResource QuestionTextBlockStyle}" />
 
                 <TextBox Text="{Binding BeatmapUrl, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Column="1"
-                         Grid.Row="1"
                          Style="{StaticResource SmallInputTextBox}" />
 
                 <Button Content="Add"
                         Grid.Column="2"
-                        Grid.RowSpan="2"
                         Command="{Binding AddNewBeatmapCommand}"
                         Style="{StaticResource BaseUIButton}" />
 
@@ -57,6 +43,12 @@
 
             <local:BeatmapContainer DataContext="{Binding Beatmapsets}"
                                     Grid.Row="1" />
+
+            <TextBlock Text="Loading..."
+                       Grid.Row="2"
+                       HorizontalAlignment="Left"
+                       Visibility="{Binding ProcessingBeatmaps, Converter={local:BooleanToVisiblityConverter}}"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
 
             <Button Content="Check for mods"
                     Grid.Row="2"

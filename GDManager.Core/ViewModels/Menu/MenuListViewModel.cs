@@ -48,6 +48,12 @@ namespace GDManager.Core
                 },
                 new MenuListItemViewModel
                 {
+                    Name = "Settings",
+                    Icon = IconType.Settings,
+                    TargetPage = ApplicationPage.Settings
+                },
+                new MenuListItemViewModel
+                {
                     Name = "About",
                     Icon = IconType.InfoCircle,
                     TargetPage = ApplicationPage.About

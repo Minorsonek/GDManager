@@ -28,6 +28,9 @@ namespace GDManager
                 case ApplicationPage.About:
                     return new AboutPage();
 
+                case ApplicationPage.Settings:
+                    return new SettingsPage();
+
                 case ApplicationPage.Experimental:
                     return new ExperimentalPage();
 
@@ -53,6 +56,9 @@ namespace GDManager
 
             if (page is AboutPage)
                 return ApplicationPage.About;
+
+            if (page is SettingsPage)
+                return ApplicationPage.Settings;
 
             if (page is ExperimentalPage)
                 return ApplicationPage.Experimental;

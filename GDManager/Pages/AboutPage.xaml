@@ -11,9 +11,21 @@
             Padding="60">
 
         <StackPanel>
-            <TextBlock Text="Fully made by Minorsonek, more info soon."
+            
+            <TextBlock Text="Fully made by Minorsonek."
                        TextWrapping="WrapWithOverflow"
                        Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="Application website: gdmanager.minorsonek.pl"
+                       TextWrapping="WrapWithOverflow"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="Application is opensource, github:"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="https://github.com/Minorsonek/GDManager"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
         </StackPanel>
         
     </Border>
