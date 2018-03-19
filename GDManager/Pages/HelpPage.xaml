@@ -10,7 +10,7 @@
             Padding="60">
 
         <StackPanel>
-            <TextBlock Text="Better UI soon, for now i've made it just to get WORKING version."
+            <TextBlock Text="More features soon (Delete button, automatically checking for mods each hour, notifications, asynchronous mod checking)."
                        TextWrapping="WrapWithOverflow"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 
@@ -21,7 +21,7 @@
             <TextBlock Text="For now, no error handling, so STICK to the tutorial below."
                        Style="{StaticResource QuestionTextBlockStyle}" />
 
-            <TextBlock Text="In the difficulty Url enter the SINGLE beatmap DISCUSSION url, which you get by clicking on your difficulty in the discussion thread (timeline) at the end of the url is optional"
+            <TextBlock Text="In the difficulty Url enter the SINGLE beatmap DISCUSSION url, which you get by clicking on your difficulty in the discussion thread, (timeline) at the end of the url is optional"
                        TextWrapping="WrapWithOverflow"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 
@@ -29,10 +29,15 @@
                        FontFamily="{StaticResource FontMontserratExtraBold}"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 
-            <TextBlock Text="Click add to save it, as i said no error handling for now so be precise."
+            <TextBlock Text="Click add to save it, as i said no error handling for now so be precise or the application will do nothing."
+                       TextWrapping="WrapWithOverflow"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 
             <TextBlock Text="To check mods, click Check button as it will check if there are new mods SPECIFIC to the diff you provided in EVERY listed beatmap."
+                       TextWrapping="WrapWithOverflow"
+                       Style="{StaticResource QuestionTextBlockStyle}" />
+
+            <TextBlock Text="Maps with new mods will appear as GREEN."
                        TextWrapping="WrapWithOverflow"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 

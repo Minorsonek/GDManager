@@ -44,7 +44,7 @@ namespace GDManager.Core
         /// <summary>
         /// List of every saved beatmap
         /// </summary>
-        public ObservableCollection<BeatmapListItem> Beatmapsets { get; set; } 
+        public ObservableCollection<BeatmapListItem> Beatmapsets { get; set; }
 
         #endregion
 
@@ -88,7 +88,11 @@ namespace GDManager.Core
             Beatmapsets = new ObservableCollection<BeatmapListItem>();
 
             // Load saved beatmaps
-            Task.Run(() => LoadBeatmaps());            
+            try
+            {
+                Task.Run(() => LoadBeatmaps());
+            }
+            catch { }
         }
 
         #endregion
@@ -100,11 +104,15 @@ namespace GDManager.Core
         /// </summary>
         private void AddUserBeatmap()
         {
-            // Add the beatmap to the list based on input
-            Beatmapsets.Add(AddBeatmap(BeatmapUrl));
+            try
+            {
+                // Add the beatmap to the list based on input
+                Beatmapsets.Add(AddBeatmap(BeatmapUrl));
 
-            // Save current state of beatmaps
-            SaveBeatmaps();
+                // Save current state of beatmaps
+                SaveBeatmaps();
+            }
+            catch { }
         }
 
         /// <summary>
@@ -112,31 +120,35 @@ namespace GDManager.Core
         /// </summary>
         private void CheckMods()
         {
-            // Application is busy
-            ProcessingBeatmaps = true;
-
-            // Check each beatmapset...
-            foreach (var beatmapset in Beatmapsets)
+            try
             {
-                // Get beatmapset discussion 
-                var beatmapDiscussion = GetBeatmapsetDiscussionByURL(beatmapset.DiscussionUrl);
+                // Application is busy
+                ProcessingBeatmaps = true;
 
-                // Get into every beatmap discussion
-                foreach (var discussion in beatmapDiscussion.Discussions)
-                    // Only if the beatmap is the one we are looking for...
-                    if (discussion.BeatmapID == beatmapset.BeatmapID)
-                    {
-                        // Check if there are mods
-                        if (discussion.CanBeResolved && !discussion.IsResolved)
-                            beatmapset.IsNewMod = true;
-                        else
-                            beatmapset.IsNewMod = false;
-                    }
+                // Check each beatmapset...
+                foreach (var beatmapset in Beatmapsets)
+                {
+                    // Get beatmapset discussion 
+                    var beatmapDiscussion = GetBeatmapsetDiscussionByURL(beatmapset.DiscussionUrl);
+
+                    // Get into every beatmap discussion
+                    foreach (var discussion in beatmapDiscussion.Discussions)
+                        // Only if the beatmap is the one we are looking for...
+                        if (discussion.BeatmapID == beatmapset.BeatmapID)
+                        {
+                            // Check if there are mods
+                            if (discussion.CanBeResolved && !discussion.IsResolved)
+                                beatmapset.IsNewMod = true;
+                            else
+                                beatmapset.IsNewMod = false;
+                        }
+                }
+
+                // Inform the view
+                OnPropertyChanged(nameof(Beatmapsets));
+                ProcessingBeatmaps = false;
             }
-
-            // Inform the view
-            OnPropertyChanged(nameof(Beatmapsets));
-            ProcessingBeatmaps = false;
+            catch { }
         }
 
         #endregion
@@ -148,29 +160,33 @@ namespace GDManager.Core
         /// </summary>
         private BeatmapListItem AddBeatmap(string difficultyUrl)
         {
-            // Convert difficulty url to the beatmapset discussion thread url
-            var discussionUrl = ConvertDiffUrlThread(difficultyUrl);
+            try
+            {
+                // Convert difficulty url to the beatmapset discussion thread url
+                var discussionUrl = ConvertDiffUrlThread(difficultyUrl);
 
-            // Get beatmapset discussion 
-            var beatmapDiscussion = GetBeatmapsetDiscussionByURL(discussionUrl);
+                // Get beatmapset discussion 
+                var beatmapDiscussion = GetBeatmapsetDiscussionByURL(discussionUrl);
 
-            // Get the ID of beatmap we are adding
-            var id = GetBeatmapIDFromURL(difficultyUrl);
+                // Get the ID of beatmap we are adding
+                var id = GetBeatmapIDFromURL(difficultyUrl);
 
-            // Get the beatmap we need from that
-            foreach (var tokenBeatmap in beatmapDiscussion.Beatmaps)
-                if (tokenBeatmap.ID == id)
-                {
-                    // We have the beatmap we need, return new item based on this
-                    return new BeatmapListItem
+                // Get the beatmap we need from that
+                foreach (var tokenBeatmap in beatmapDiscussion.Beatmaps)
+                    if (tokenBeatmap.ID == id)
                     {
-                        DiscussionUrl = discussionUrl,
-                        BeatmapID = tokenBeatmap.ID,
-                        Title = beatmapDiscussion.Artist + " - " + beatmapDiscussion.Title,
-                        Name = tokenBeatmap.DiffName,
-                        StarRating = tokenBeatmap.DiffStarRating
-                    };
-                }
+                        // We have the beatmap we need, return new item based on this
+                        return new BeatmapListItem
+                        {
+                            DiscussionUrl = discussionUrl,
+                            BeatmapID = tokenBeatmap.ID,
+                            Title = beatmapDiscussion.Artist + " - " + beatmapDiscussion.Title,
+                            Name = tokenBeatmap.DiffName,
+                            StarRating = tokenBeatmap.DiffStarRating
+                        };
+                    }
+            }
+            catch { }
 
             // If none found, TODO: output error
             return null;
@@ -199,7 +215,7 @@ namespace GDManager.Core
 
             // From the html page, take script tags
             var scriptNodes = doc.DocumentNode.Descendants()
-                              .Where(n => n.Name == "script");
+                                .Where(n => n.Name == "script");
 
             // Find the one with json inside
             var jsonString = GetJsonScriptTag(scriptNodes).InnerText;
@@ -217,11 +233,18 @@ namespace GDManager.Core
         /// <param name="url">The url to the beatmap</param>
         private string GetBeatmapIDFromURL(string url)
         {
-            // Split the url by /
-            var tokens = url.Split('/');
+            try
+            {
+                // Split the url by /
+                var tokens = url.Split('/');
 
-            // 6th token is our id
-            return tokens[6];
+                // 6th token is our id
+                return tokens[6];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>

@@ -19,8 +19,7 @@
 
                             <Grid x:Name="container" 
                                   Height="100" 
-                                  Margin="5"
-                                  Background="{StaticResource WhiteDarkBrush}">
+                                  Margin="5">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50" />
@@ -33,7 +32,7 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Text="{Binding IsNewMod}"
+                                <TextBlock Text="IMG"
                                            Style="{StaticResource QuestionTextBlockStyle}" />
 
                                 <TextBlock Text="{Binding Title}"
@@ -64,14 +63,14 @@
                             <EventTrigger RoutedEvent="MouseEnter">
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation To="{StaticResource WhitePure}" Duration="0:0:0.3" Storyboard.TargetName="container" Storyboard.TargetProperty="Background.Color" />
+                                        <ColorAnimation To="{StaticResource WhitePure}" Duration="0:0:0.3" Storyboard.TargetName="background" Storyboard.TargetProperty="Background.Color" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
                             <EventTrigger RoutedEvent="MouseLeave">
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation To="{StaticResource WhiteLight}" Duration="0:0:0.3" Storyboard.TargetName="container" Storyboard.TargetProperty="Background.Color" />
+                                        <ColorAnimation From="{StaticResource WhitePure}" Duration="0:0:0.3" Storyboard.TargetName="background" Storyboard.TargetProperty="Background.Color" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
