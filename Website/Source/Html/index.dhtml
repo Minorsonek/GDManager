@@ -1,0 +1,38 @@
+<!DOCTYPE html> 
+<html lang="en-GB"> 
+ 
+<head> 
+    <meta charset="utf-8"> 
+    <title>Title</title> 
+    <link href="/Assets/Css/style.css" rel="stylesheet" type="text/css" /> 
+</head> 
+ 
+<body> 
+ 
+    <div class="grid-wrapper">
+        
+        <div class="text-horizontal-center">
+            <h1>GD Manager</h1>
+            <h3>Made by Minorsonek</h2>
+        </div>
+
+        <div class="grid horizontal-center">
+            <div class="col one-half">
+                <img src="https://i.imgur.com/BLwsmGz.png" />
+            </div>
+            <div class="col one-half">
+                <img src="https://i.imgur.com/IScB2RG.png" />
+            </div>
+            <div class="col one-whole">
+                <a href="http://www.minorsonek.pl/gdmanager/Minorsonek's%20GD%20Manager%20new.rar">
+                    <div class="demo-col">
+                        <h2>DOWNLOAD</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+</body> 
+ 
+</html>

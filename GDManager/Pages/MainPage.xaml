@@ -41,8 +41,7 @@
 
             </Grid>
 
-            <local:BeatmapContainer DataContext="{Binding Beatmapsets}"
-                                    Grid.Row="1" />
+            <local:BeatmapContainer Grid.Row="1" />
 
             <TextBlock Text="Loading..."
                        Grid.Row="2"

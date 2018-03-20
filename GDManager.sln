@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDManager", "GDManager\GDManager.csproj", "{5C1BCB4D-53CF-4653-BC6C-BCFAF99EAE70}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDManager.Core", "GDManager.Core\GDManager.Core.csproj", "{C5657F11-316B-45F4-AB30-C91F1FE27E15}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testinator.AnimationFramework", "..\Testinator\Source\Testinator.AnimationFramework\Testinator.AnimationFramework.csproj", "{2E0E2554-DA07-45A6-9647-8F2907851472}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDManager", "GDManager\GDManager.csproj", "{0602359A-AAD3-49D4-A5AB-6A37D28AF892}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C1BCB4D-53CF-4653-BC6C-BCFAF99EAE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C1BCB4D-53CF-4653-BC6C-BCFAF99EAE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C1BCB4D-53CF-4653-BC6C-BCFAF99EAE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C1BCB4D-53CF-4653-BC6C-BCFAF99EAE70}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5657F11-316B-45F4-AB30-C91F1FE27E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C5657F11-316B-45F4-AB30-C91F1FE27E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5657F11-316B-45F4-AB30-C91F1FE27E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +23,10 @@ Global
 		{2E0E2554-DA07-45A6-9647-8F2907851472}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E0E2554-DA07-45A6-9647-8F2907851472}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E0E2554-DA07-45A6-9647-8F2907851472}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0602359A-AAD3-49D4-A5AB-6A37D28AF892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0602359A-AAD3-49D4-A5AB-6A37D28AF892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0602359A-AAD3-49D4-A5AB-6A37D28AF892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0602359A-AAD3-49D4-A5AB-6A37D28AF892}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

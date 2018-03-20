@@ -6,7 +6,7 @@ namespace GDManager.Core
     /// <summary>
     /// Single beatmapset item stored in the list in main page
     /// </summary>
-    public class BeatmapListItem : BaseViewModel
+    public class BeatmapListItemViewModel : BaseViewModel
     {
         #region Public Properties
 
@@ -24,6 +24,11 @@ namespace GDManager.Core
         /// The name of this beatmap
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// The url to beatmap image website
+        /// </summary>
+        public string ImageWebsite { get; set; }
 
         /// <summary>
         /// The star rating of this beatmap
@@ -49,6 +54,11 @@ namespace GDManager.Core
         /// </summary>
         public ICommand OpenBeatmapInBrowserCommand { get; private set; }
 
+        /// <summary>
+        /// The command to delete beatmap item from the list
+        /// </summary>
+        public ICommand DeleteBeatmapCommand { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -56,10 +66,11 @@ namespace GDManager.Core
         /// <summary>
         /// Default constructor
         /// </summary>
-        public BeatmapListItem()
+        public BeatmapListItemViewModel()
         {
             // Create commands
             OpenBeatmapInBrowserCommand = new RelayCommand(() => Process.Start(DiscussionUrl));
+            DeleteBeatmapCommand = new RelayCommand(() => BeatmapListViewModel.Instance.DeleteBeatmap(this));
         }
 
         #endregion

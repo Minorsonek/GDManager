@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GDManager"
         xmlns:Animations="clr-namespace:Testinator.AnimationFramework;assembly=Testinator.AnimationFramework"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         WindowStyle="None"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
@@ -13,7 +14,9 @@
         MinHeight="{Binding WindowMinimumHeight}"
         Title="GDManager" Height="720" Width="1024">
 
+
     <Window.Resources>
+        
         <Style TargetType="{x:Type local:MainWindow}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -82,6 +85,29 @@
 
         </Grid.ColumnDefinitions>
 
+        <!-- https://bitbucket.org/hardcodet/notifyicon-wpf/src/a72c42d41e187761d27486f4c031f78f0018f2b1?at=master -->
+
+        <tb:TaskbarIcon
+            x:Name="tb"
+            VerticalAlignment="Top"
+            IconSource="/Assets/Icons/flame-2-64.ico">
+            <tb:TaskbarIcon.TrayToolTip>
+                <Border
+                    Background="White"
+                    BorderBrush="Orange"
+                    BorderThickness="2"
+                    CornerRadius="4"
+                    Opacity="0.8"
+                    Width="160"
+                    Height="40">
+                    <TextBlock
+                        Text="Something here soon!"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                </Border>
+            </tb:TaskbarIcon.TrayToolTip>
+        </tb:TaskbarIcon>
+
         <local:SideMenuControl MaxWidth="200"
                                Panel.ZIndex="50"
                                HorizontalAlignment="Left"
@@ -120,7 +146,7 @@
                 <!-- Title -->
                 <Viewbox Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
 
-                    <TextBlock Text="GDManager"
+                    <TextBlock Text="Minorsonek's GD Manager"
                                Style="{StaticResource TitleText}"/>
 
                 </Viewbox>

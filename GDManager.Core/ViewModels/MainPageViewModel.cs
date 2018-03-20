@@ -20,7 +20,7 @@ namespace GDManager.Core
         /// <summary>
         /// Sublist of every loaded beatmap which rewrites into UI collection as soon as every beatmap is loaded
         /// </summary>
-        private List<BeatmapListItem> mBeatmapsets = new List<BeatmapListItem>();
+        private List<BeatmapListItemViewModel> mBeatmapsets = new List<BeatmapListItemViewModel>();
 
         #endregion
 
@@ -39,12 +39,7 @@ namespace GDManager.Core
         /// <summary>
         /// An event to fire whenever main UI should refresh itself
         /// </summary>
-        public event Action RefreshUI;
-
-        /// <summary>
-        /// List of every saved beatmap
-        /// </summary>
-        public ObservableCollection<BeatmapListItem> Beatmapsets { get; set; }
+        public event Action RefreshUI = () => { };
 
         #endregion
 
@@ -81,18 +76,21 @@ namespace GDManager.Core
             {
                 // Rewrite saved beatmaps to the UI collection
                 foreach (var beatmap in mBeatmapsets)
-                    Beatmapsets.Add(beatmap);
+                    BeatmapListViewModel.Instance.Beatmaps.Add(beatmap);
             });
 
             // Initialize the list
-            Beatmapsets = new ObservableCollection<BeatmapListItem>();
+            BeatmapListViewModel.Instance.Beatmaps = new ObservableCollection<BeatmapListItemViewModel>();
 
             // Load saved beatmaps
             try
             {
                 Task.Run(() => LoadBeatmaps());
             }
-            catch { }
+            catch
+            {
+                ProcessingBeatmaps = false;
+            }
         }
 
         #endregion
@@ -107,7 +105,7 @@ namespace GDManager.Core
             try
             {
                 // Add the beatmap to the list based on input
-                Beatmapsets.Add(AddBeatmap(BeatmapUrl));
+                BeatmapListViewModel.Instance.AddBeatmap(AddBeatmap(BeatmapUrl));
 
                 // Save current state of beatmaps
                 SaveBeatmaps();
@@ -126,7 +124,7 @@ namespace GDManager.Core
                 ProcessingBeatmaps = true;
 
                 // Check each beatmapset...
-                foreach (var beatmapset in Beatmapsets)
+                foreach (var beatmapset in BeatmapListViewModel.Instance.Beatmaps)
                 {
                     // Get beatmapset discussion 
                     var beatmapDiscussion = GetBeatmapsetDiscussionByURL(beatmapset.DiscussionUrl);
@@ -138,17 +136,18 @@ namespace GDManager.Core
                         {
                             // Check if there are mods
                             if (discussion.CanBeResolved && !discussion.IsResolved)
+                            { 
+                                // Mods found, get out of there
                                 beatmapset.IsNewMod = true;
-                            else
-                                beatmapset.IsNewMod = false;
+                                break;
+                            }
                         }
                 }
 
                 // Inform the view
-                OnPropertyChanged(nameof(Beatmapsets));
                 ProcessingBeatmaps = false;
             }
-            catch { }
+            catch { ProcessingBeatmaps = false; }
         }
 
         #endregion
@@ -158,7 +157,7 @@ namespace GDManager.Core
         /// <summary>
         /// Adds new beatmap to the list
         /// </summary>
-        private BeatmapListItem AddBeatmap(string difficultyUrl)
+        private BeatmapListItemViewModel AddBeatmap(string difficultyUrl)
         {
             try
             {
@@ -176,12 +175,13 @@ namespace GDManager.Core
                     if (tokenBeatmap.ID == id)
                     {
                         // We have the beatmap we need, return new item based on this
-                        return new BeatmapListItem
+                        return new BeatmapListItemViewModel
                         {
                             DiscussionUrl = discussionUrl,
                             BeatmapID = tokenBeatmap.ID,
                             Title = beatmapDiscussion.Artist + " - " + beatmapDiscussion.Title,
                             Name = tokenBeatmap.DiffName,
+                            ImageWebsite = beatmapDiscussion.ImageUrl,
                             StarRating = tokenBeatmap.DiffStarRating
                         };
                     }
@@ -300,7 +300,7 @@ namespace GDManager.Core
             var fileContent = new List<string>();
 
             // For each beatmap...
-            foreach (var beatmap in Beatmapsets)
+            foreach (var beatmap in BeatmapListViewModel.Instance.Beatmaps)
             {
                 // Save beatmap url
                 var slashAppender = beatmap.DiscussionUrl.EndsWith("/") ? "" : "/";

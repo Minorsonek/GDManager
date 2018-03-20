@@ -60,7 +60,6 @@
     <Compile Include="Base\RelayCommand.cs" />
     <Compile Include="Base\RelayParameterizedCommand.cs" />
     <Compile Include="DataModels\ApplicationPage.cs" />
-    <Compile Include="DataModels\Beatmap\BeatmapListItem.cs" />
     <Compile Include="DataModels\Beatmap\Beatmap.cs" />
     <Compile Include="DataModels\Beatmap\Discussion.cs" />
     <Compile Include="DataModels\Beatmap\BeatmapDiscussion.cs" />
@@ -71,6 +70,8 @@
     <Compile Include="IoC\IoC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
+    <Compile Include="ViewModels\BeatmapList\BeatmapListItemViewModel.cs" />
+    <Compile Include="ViewModels\BeatmapList\BeatmapListViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Menu\MenuListItemViewModel.cs" />
     <Compile Include="ViewModels\Menu\MenuListViewModel.cs" />

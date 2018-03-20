@@ -26,6 +26,11 @@ namespace GDManager.Core
         public string Artist { get; set; }
 
         /// <summary>
+        /// The url for thumbnail of this beatmapset
+        /// </summary>
+        public string ImageUrl { get; set; }
+
+        /// <summary>
         /// The listed tags under the beatmapset
         /// </summary>
         public string[] Tags { get; set; }
@@ -69,6 +74,7 @@ namespace GDManager.Core
             Tags = beatmapsetJson["tags"].ToString().Split(' ');
             Ranked = (bool)beatmapsetJson["ranked"];
             DiscussionEnabled = (bool)beatmapsetJson["discussion_enabled"];
+            ImageUrl = (string)beatmapsetJson["covers"]["list@2x"];
 
             Beatmaps = new List<Beatmap>();
             foreach (var beatmapJson in beatmapsetJson["beatmaps"])
