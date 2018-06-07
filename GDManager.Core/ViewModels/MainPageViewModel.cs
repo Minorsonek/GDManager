@@ -71,26 +71,23 @@ namespace GDManager.Core
         {
             // Create commands
             AddNewBeatmapCommand = new RelayCommand(AddUserBeatmap);
-            CheckModsCommand = new RelayCommand(CheckMods);
+            CheckModsCommand = new RelayCommand(() => Task.Run(async () => await CheckMods()));
             RefreshUICommand = new RelayCommand(() =>
             {
                 // Rewrite saved beatmaps to the UI collection
                 foreach (var beatmap in mBeatmapsets)
-                    BeatmapListViewModel.Instance.Beatmaps.Add(beatmap);
+                    IoC.Beatmaps.Add(beatmap);
             });
 
             // Initialize the list
-            BeatmapListViewModel.Instance.Beatmaps = new ObservableCollection<BeatmapListItemViewModel>();
+            IoC.Beatmaps = new ObservableCollection<BeatmapListItemViewModel>();
 
             // Load saved beatmaps
             try
             {
-                Task.Run(() => LoadBeatmaps());
+                Task.Run(async () => await LoadBeatmaps());
             }
-            catch
-            {
-                ProcessingBeatmaps = false;
-            }
+            catch { }
         }
 
         #endregion
@@ -105,26 +102,27 @@ namespace GDManager.Core
             try
             {
                 // Add the beatmap to the list based on input
-                BeatmapListViewModel.Instance.AddBeatmap(AddBeatmap(BeatmapUrl));
+                IoC.Beatmaps.AddBeatmap(AddBeatmap(BeatmapUrl));
 
                 // Save current state of beatmaps
-                SaveBeatmaps();
+                IoC.BeatmapManager.SaveBeatmaps();
             }
             catch { }
+
+            // Clear url box so its easier to provide next one
+            BeatmapUrl = string.Empty;
         }
 
         /// <summary>
         /// Checks every listed beatmap for mods
         /// </summary>
-        private void CheckMods()
+        private async Task CheckMods()
         {
-            try
+            // Run this in a background...
+            await RunCommandAsync(() => ProcessingBeatmaps, async () =>
             {
-                // Application is busy
-                ProcessingBeatmaps = true;
-
                 // Check each beatmapset...
-                foreach (var beatmapset in BeatmapListViewModel.Instance.Beatmaps)
+                foreach (var beatmapset in IoC.Beatmaps)
                 {
                     // Get beatmapset discussion 
                     var beatmapDiscussion = GetBeatmapsetDiscussionByURL(beatmapset.DiscussionUrl);
@@ -136,18 +134,14 @@ namespace GDManager.Core
                         {
                             // Check if there are mods
                             if (discussion.CanBeResolved && !discussion.IsResolved)
-                            { 
+                            {
                                 // Mods found, get out of there
                                 beatmapset.IsNewMod = true;
                                 break;
                             }
                         }
                 }
-
-                // Inform the view
-                ProcessingBeatmaps = false;
-            }
-            catch { ProcessingBeatmaps = false; }
+            });
         }
 
         #endregion
@@ -195,14 +189,7 @@ namespace GDManager.Core
         /// <summary>
         /// Converts the difficulty specific url to the beatmapset discussion thread url
         /// </summary>
-        private string ConvertDiffUrlThread(string difficultyUrl)
-        {
-            // Find where the discussion word is
-            int discussionIndex = difficultyUrl.IndexOf("discussion");
-
-            // Remove everything afterwards
-            return difficultyUrl.Substring(0, discussionIndex + "discussion".Length);
-        }
+        private string ConvertDiffUrlThread(string difficultyUrl) => difficultyUrl.Substring(0, difficultyUrl.IndexOf("discussion") + "discussion".Length);
 
         /// <summary>
         /// Returns the <see cref="BeatmapsetDiscussion"/> object from the osu! website
@@ -265,50 +252,30 @@ namespace GDManager.Core
         /// <summary>
         /// Loads saved beatmaps from file to the list in this page
         /// </summary>
-        private void LoadBeatmaps()
+        private async Task LoadBeatmaps()
         {
-            // Application is busy
-            ProcessingBeatmaps = true;
-
-            // Load everything from file
-            var fileContent = File.ReadAllLines("beatmaps.txt");
-
-            // Convert file content into beatmaps
-            for (int i = 0; i < fileContent.Length; i++)
+            // Run this in a background...
+            await RunCommandAsync(() => ProcessingBeatmaps, async () =>
             {
-                // Get url line
-                var difficultyUrl = fileContent[i];
+                // Load everything from file
+                var fileContent = File.ReadAllLines("beatmaps.txt");
 
-                // Convert it to beatmap
-                var beatmap = AddBeatmap(difficultyUrl);
+                // Convert file content into beatmaps
+                for (int i = 0; i < fileContent.Length; i++)
+                {
+                    // Get url line
+                    var difficultyUrl = fileContent[i];
 
-                // Add it to the sublist
-                mBeatmapsets.Add(beatmap);
-            }
+                    // Convert it to beatmap
+                    var beatmap = AddBeatmap(difficultyUrl);
 
-            // Everything finished, refresh the UI
-            RefreshUI.Invoke();
-            ProcessingBeatmaps = false;
-        }
+                    // Add it to the sublist
+                    mBeatmapsets.Add(beatmap);
+                }
 
-        /// <summary>
-        /// Saves current state of beatmapsets list to the list
-        /// </summary>
-        private void SaveBeatmaps()
-        {
-            // Prepare list of content to save
-            var fileContent = new List<string>();
-
-            // For each beatmap...
-            foreach (var beatmap in BeatmapListViewModel.Instance.Beatmaps)
-            {
-                // Save beatmap url
-                var slashAppender = beatmap.DiscussionUrl.EndsWith("/") ? "" : "/";
-                fileContent.Add(beatmap.DiscussionUrl + slashAppender + beatmap.BeatmapID);
-            }
-
-            // Save it to .txt file
-            File.WriteAllLines("beatmaps.txt", fileContent);
+                // Everything finished, refresh the UI
+                RefreshUI.Invoke();
+            });
         }
 
         #endregion

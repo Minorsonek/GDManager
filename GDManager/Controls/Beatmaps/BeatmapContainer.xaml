@@ -11,8 +11,9 @@
             Padding="20"
             CornerRadius="3">
         
-        <ScrollViewer DataContext="{x:Static core:BeatmapListViewModel.Instance}" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Beatmaps}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Beatmaps,
+                                          Source={x:Static local:ViewModelLocator.Instance}}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <local:BeatmapItem />

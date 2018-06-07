@@ -1,4 +1,5 @@
 ﻿using GDManager.Core;
+using System.Collections.ObjectModel;
 
 namespace GDManager
 {
@@ -18,6 +19,11 @@ namespace GDManager
         /// The application view model
         /// </summary>
         public static ApplicationViewModel ApplicationViewModel => IoC.Application;
+
+        /// <summary>
+        /// The main beatmap list
+        /// </summary>
+        public static ObservableCollection<BeatmapListItemViewModel> Beatmaps => IoC.Beatmaps;
 
         #endregion
     }
