@@ -1,5 +1,4 @@
 ﻿using GDManager.Core;
-using System.Windows;
 
 namespace GDManager
 {
@@ -25,12 +24,6 @@ namespace GDManager
         public MainPage(MainPageViewModel specificViewModel) : base(specificViewModel)
         {
             InitializeComponent();
-
-            
-            // Refresh the UI everytime its needed
-            (DataContext as MainPageViewModel).RefreshUI += 
-                () => Application.Current.Dispatcher.Invoke
-                    (() => (DataContext as MainPageViewModel).RefreshUICommand.Execute(null));
         }
 
         #endregion

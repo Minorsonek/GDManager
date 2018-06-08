@@ -15,10 +15,7 @@ namespace GDManager.Core
         /// <typeparam name="T">The type of return value</typeparam>
         /// <param name="lamba">The expression to compile</param>
         /// <returns></returns>
-        public static T GetPropertyValue<T>(this Expression<Func<T>> lamba)
-        {
-            return lamba.Compile().Invoke();
-        }
+        public static T GetPropertyValue<T>(this Expression<Func<T>> lamba) => lamba.Compile().Invoke();
 
         /// <summary>
         /// Sets the underlying properties value to the given value
@@ -38,7 +35,6 @@ namespace GDManager.Core
 
             // Set the property value
             propertyInfo.SetValue(target, value);
-
         }
     }
 }

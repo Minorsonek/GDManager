@@ -10,7 +10,7 @@
             Padding="60">
 
         <StackPanel>
-            <TextBlock Text="More features soon (Delete button, automatically checking for mods each hour, notifications, asynchronous mod checking)."
+            <TextBlock Text="More features soon (automatically checking for mods each hour, notifications, user login, website, updater, etc.)."
                        TextWrapping="WrapWithOverflow"
                        Style="{StaticResource QuestionTextBlockStyle}" />
 

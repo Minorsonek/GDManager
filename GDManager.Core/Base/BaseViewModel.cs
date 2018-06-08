@@ -20,10 +20,7 @@ namespace GDManager.Core
         /// Call this to fire a <see cref="PropertyChanged"/> event
         /// </summary>
         /// <param name="name"></param>
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(name));
-        }
+        public void OnPropertyChanged(string name) => PropertyChanged(this, new PropertyChangedEventArgs(name));
 
         #region Command Helpers
 

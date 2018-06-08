@@ -16,11 +16,6 @@ namespace GDManager.Core
         public static IKernel Kernel { get; private set; } = new StandardKernel();
 
         /// <summary>
-        /// The list which contains every listed beatmap
-        /// </summary>
-        public static ObservableCollection<BeatmapListItemViewModel> Beatmaps { get; set; }
-
-        /// <summary>
         /// A shortcut to access the <see cref="BeatmapManager"/>
         /// </summary>
         public static BeatmapManager BeatmapManager => IoC.Get<BeatmapManager>();

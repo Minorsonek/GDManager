@@ -70,7 +70,7 @@ namespace GDManager.Core
         {
             // Create commands
             OpenBeatmapInBrowserCommand = new RelayCommand(() => Process.Start(DiscussionUrl));
-            DeleteBeatmapCommand = new RelayCommand(() => IoC.Beatmaps.DeleteBeatmap(this));
+            DeleteBeatmapCommand = new RelayCommand(() => IoC.BeatmapManager.DeleteBeatmap(this));
         }
 
         #endregion

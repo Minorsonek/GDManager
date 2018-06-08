@@ -23,7 +23,7 @@ namespace GDManager
         /// <summary>
         /// The main beatmap list
         /// </summary>
-        public static ObservableCollection<BeatmapListItemViewModel> Beatmaps => IoC.Beatmaps;
+        public static ObservableCollection<BeatmapListItemViewModel> Beatmaps => IoC.BeatmapManager.Beatmaps;
 
         #endregion
     }
