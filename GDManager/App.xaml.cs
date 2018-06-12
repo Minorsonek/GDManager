@@ -1,5 +1,6 @@
-﻿using System.Windows;
+﻿using AutoUpdaterDotNET;
 using GDManager.Core;
+using System.Windows;
 
 namespace GDManager
 {
@@ -20,9 +21,21 @@ namespace GDManager
             // Setup the main application 
             ApplicationSetup();
 
+            // Check for updates
+            CheckUpdates();
+
             // Show the main window
             Current.MainWindow = new MainWindow();
             Current.MainWindow.Show();
+        }
+
+        /// <summary>
+        /// Tries to connect with the server and checks if there is new version available for this app
+        /// </summary>
+        private void CheckUpdates()
+        {
+            // Get xml file to check if we have newest version
+            AutoUpdater.Start("http://minorsonek.pl/gdmanager/releases/GDManager.Update.xml");
         }
 
         /// <summary>
