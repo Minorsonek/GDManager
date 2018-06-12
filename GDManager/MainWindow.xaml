@@ -85,29 +85,6 @@
 
         </Grid.ColumnDefinitions>
 
-        <!-- https://bitbucket.org/hardcodet/notifyicon-wpf/src/a72c42d41e187761d27486f4c031f78f0018f2b1?at=master -->
-
-        <tb:TaskbarIcon
-            x:Name="tb"
-            VerticalAlignment="Top"
-            IconSource="/Assets/Icons/flame-2-64.ico">
-            <tb:TaskbarIcon.TrayToolTip>
-                <Border
-                    Background="White"
-                    BorderBrush="Orange"
-                    BorderThickness="2"
-                    CornerRadius="4"
-                    Opacity="0.8"
-                    Width="160"
-                    Height="40">
-                    <TextBlock
-                        Text="Something here soon!"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-                </Border>
-            </tb:TaskbarIcon.TrayToolTip>
-        </tb:TaskbarIcon>
-
         <local:SideMenuControl MaxWidth="200"
                                Panel.ZIndex="50"
                                HorizontalAlignment="Left"

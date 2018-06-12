@@ -1,5 +1,6 @@
 ﻿using AutoUpdaterDotNET;
 using GDManager.Core;
+using Hardcodet.Wpf.TaskbarNotification;
 using System.Windows;
 
 namespace GDManager
@@ -27,6 +28,10 @@ namespace GDManager
             // Show the main window
             Current.MainWindow = new MainWindow();
             Current.MainWindow.Show();
+
+            // Initialize tray icon for minimize
+            var tb = (TaskbarIcon)FindResource("TrayIcon");
+            tb.DataContext = new TrayIconViewModel();
         }
 
         /// <summary>
